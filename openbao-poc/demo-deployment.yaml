@@ -25,10 +25,8 @@ spec:
               value: "8080"
             - name: ECHO_INCLUDE_ENV_VARS
               value: "true"
-            - name: GREETING
-              valueFrom:
-                secretKeyRef:
-                  name: demo-secret
-                  key: GREETING
+          envFrom:
+            - secretRef:
+                name: demo-secret   # secret 전체 키를 env로 마운트 (GREETING 등)
           ports:
             - containerPort: 8080
