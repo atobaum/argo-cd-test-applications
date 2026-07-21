@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-app
+  namespace: demo
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-app
+  template:
+    metadata:
+      labels:
+        app: demo-app
+    spec:
+      serviceAccountName: demo-app
+      containers:
+        - name: echo
+          image: mendhak/http-https-echo:latest
+          env:
+            - name: HTTP_PORT
+              value: "8080"
+            - name: ECHO_INCLUDE_ENV_VARS
+              value: "true"
+            - name: GREETING
+              valueFrom:
+                secretKeyRef:
+                  name: demo-secret
+                  key: GREETING
+          ports:
+            - containerPort: 8080
