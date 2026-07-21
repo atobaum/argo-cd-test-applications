@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-app
+  namespace: demo
+  annotations:
+    reloader.stakater.com/auto: "true"
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-app
+  template:
+    metadata:
+      labels:
+        app: demo-app
+    spec:
+      serviceAccountName: demo-app
+      containers:
+        - name: echo
+          image: mendhak/http-https-echo:latest
+          env:
+            - name: HTTP_PORT
+              value: "8080"
+            - name: ECHO_INCLUDE_ENV_VARS
+              value: "true"
+          envFrom:
+            - secretRef:
+                name: demo-secret   # 중앙 OpenBao에서 온 secret 전체 키
+          ports:
+            - containerPort: 8080
