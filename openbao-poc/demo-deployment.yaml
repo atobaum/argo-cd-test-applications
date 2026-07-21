@@ -5,6 +5,7 @@ metadata:
   namespace: demo
   annotations:
     reloader.stakater.com/auto: "true"
+    argocd.argoproj.io/sync-wave: "1"   # 나중: Secret 준비된 뒤 배포
 spec:
   replicas: 1
   selector:
